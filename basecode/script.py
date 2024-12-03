@@ -110,27 +110,45 @@ def blrObjFunction(initialWeights, *args):
 
     n_data = train_data.shape[0]
     n_features = train_data.shape[1]
-    error = 0
-    error_grad = np.zeros((n_features + 1, 1))
+    # error = 0
+    # error_grad = np.zeros((n_features + 1, 1))
 
     ##################
     # YOUR CODE HERE #
     ##################
     # HINT: Do not forget to add the bias term to your input data
-    # Add bias term to data
-    train_data = np.hstack((np.ones((n_data, 1)), train_data))
+    # Add bias term to the data
+    X = np.hstack([np.ones((n_data, 1)), train_data])
 
-    # This is the computation of the sigmoid function
-    z = np.dot(train_data, initialWeights)
-    theta = sigmoid(z)
+    # Reshape initial weights to a column vector
+    w_k = initialWeights.reshape(-1, 1)
 
-    # This is the computation of the error using cross-entropy loss
-    error = -np.sum(labeli * np.log(theta) + (1 - labeli) * np.log(1 - theta)) / n_data
+    # Compute the sigmoid
+    h = sigmoid(X.dot(w_k))
 
-    # This is the computation of the error gradient
-    error_grad = np.dot(train_data.T, (theta - labeli)) / n_data
+    # Compute error function
+    error = (-1 / n_data) * np.sum(labeli * np.log(h) + (1 - labeli) * np.log(1 - h))
 
-    return error, error_grad
+    # Compute the gradient
+    error_grad = (1 / n_data) * X.T.dot(h - labeli)
+
+    # Return error and flattened gradient
+    return error, error_grad.flatten()
+
+
+    # train_data = np.hstack((np.ones((n_data, 1)), train_data))
+
+    # # This is the computation of the sigmoid function
+    # z = np.dot(train_data, initialWeights)
+    # theta = sigmoid(z)
+
+    # # This is the computation of the error using cross-entropy loss
+    # error = -np.sum(labeli * np.log(theta) + (1 - labeli) * np.log(1 - theta)) / n_data
+
+    # # This is the computation of the error gradient
+    # error_grad = np.dot(train_data.T, (theta - labeli)) / n_data
+
+    # return error, error_grad
 
 
 def blrPredict(W, data):
