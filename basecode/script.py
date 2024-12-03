@@ -116,6 +116,18 @@ def blrObjFunction(initialWeights, *args):
     # YOUR CODE HERE #
     ##################
     # HINT: Do not forget to add the bias term to your input data
+    # Add bias term to data
+    train_data = np.hstack((np.ones((n_data, 1)), train_data))
+
+    # This is the computation of the sigmoid function
+    z = np.dot(train_data, initialWeights)
+    theta = sigmoid(z)
+
+    # This is the computation of the error using cross-entropy loss
+    error = -np.sum(labeli * np.log(theta) + (1 - labeli) * np.log(1 - theta)) / n_data
+
+    # This is the computation of the error gradient
+    error_grad = np.dot(train_data.T, (theta - labeli)) / n_data
 
     return error, error_grad
 
