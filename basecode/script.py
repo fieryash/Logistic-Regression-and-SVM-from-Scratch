@@ -26,7 +26,7 @@ def preprocess():
        set
     """
 
-    mat = loadmat('basecode\mnist_all.mat')  # loads the MAT object as a Dictionary
+    mat = loadmat('mnist_all.mat')  # loads the MAT object as a Dictionary
 
     n_feature = mat.get("train1").shape[1]
     n_sample = 0
@@ -338,14 +338,14 @@ if __name__ == "__main__":
 
     print('\n\n--------------SVM RBF with Varying C------------------\n\n')
     # Values of C
-    C_values = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    C = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
     # Initialize lists to store accuracies
     training_accuracies = []
     validation_accuracies = []
     testing_accuracies = []
 
-    for C in C_values:
+    for c_value in C:
         rbf_svm = SVC(kernel='rbf', C=C, gamma='auto')
         rbf_svm.fit(reduced_train_data, reduced_train_label.ravel())
 
@@ -356,9 +356,9 @@ if __name__ == "__main__":
 
     # Plotting the accuracies
     plt.figure(figsize=(10, 6))
-    plt.plot(C_values, training_accuracies, label='Training Accuracy', marker='o')
-    plt.plot(C_values, validation_accuracies, label='Validation Accuracy', marker='o')
-    plt.plot(C_values, testing_accuracies, label='Testing Accuracy', marker='o')
+    plt.plot(C, training_accuracies, label='Training Accuracy', marker='o')
+    plt.plot(C, validation_accuracies, label='Validation Accuracy', marker='o')
+    plt.plot(C, testing_accuracies, label='Testing Accuracy', marker='o')
 
     plt.title('Accuracy vs C for SVM with RBF Kernel')
     plt.xlabel('C (Regularization Parameter)')
@@ -366,7 +366,15 @@ if __name__ == "__main__":
     plt.legend()
     plt.grid(True)
     plt.show()
+    
+    print('\n\n--------------SVM RBF with best C------------------\n\n')
+    rbf_model_full = svm.SVC(kernel = 'rbf', gamma = 'auto', C = 70)
+    rbf_model_full.fit(train_data, train_label.ravel())
 
+    print('----------\n RBF with FULL training set with best C : \n------------')
+    print('\n Training Accuracy:' + str(100 * rbf_model_full.score(train_data, train_label)) + '%')
+    print('\n Validation Accuracy:' + str(100 * rbf_model_full.score(validation_data, validation_label)) + '%')
+    print('\n Testing Accuracy:' + str(100 * rbf_model_full.score(test_data, test_label)) + '%')
     """
     Script for Extra Credit Part
     """
