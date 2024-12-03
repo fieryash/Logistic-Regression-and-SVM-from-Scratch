@@ -26,7 +26,7 @@ def preprocess():
        set
     """
 
-    mat = loadmat('mnist_all.mat')  # loads the MAT object as a Dictionary
+    mat = loadmat('basecode/mnist_all.mat')  # loads the MAT object as a Dictionary
 
     n_feature = mat.get("train1").shape[1]
     n_sample = 0
@@ -346,7 +346,7 @@ if __name__ == "__main__":
     testing_accuracies = []
 
     for c_value in C:
-        rbf_svm = SVC(kernel='rbf', C=C, gamma='auto')
+        rbf_svm = SVC(kernel='rbf', C=c_value, gamma='auto')
         rbf_svm.fit(reduced_train_data, reduced_train_label.ravel())
 
         # Append accuracies for current C value
