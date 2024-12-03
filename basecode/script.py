@@ -109,7 +109,7 @@ def blrObjFunction(initialWeights, *args):
     train_data, labeli = args
 
     n_data = train_data.shape[0]
-    n_features = train_data.shape[1]
+    # n_features = train_data.shape[1]
     # error = 0
     # error_grad = np.zeros((n_features + 1, 1))
 
@@ -313,6 +313,7 @@ if __name__ == "__main__":
     reduced_train_data = train_data[indices, :]
     reduced_train_label = train_label[indices, :]
 
+    print('\n\n--------------SVM- Linear------------------\n\n')
     linear_svm = SVC(kernel='linear')
     linear_svm.fit(reduced_train_data, reduced_train_label.ravel())
     print('Linear Kernel Accuracy:')
@@ -320,13 +321,22 @@ if __name__ == "__main__":
     print('Validation:', linear_svm.score(validation_data, validation_label.ravel()))
     print('Testing:', linear_svm.score(test_data, test_label.ravel()))
 
+    print('\n\n--------------SVM RBF Gamma 1------------------\n\n')
     rbf_svm = SVC(kernel='rbf', gamma=1)
     rbf_svm.fit(reduced_train_data, reduced_train_label.ravel())
     print('RBF Kernel (gamma=1) Accuracy:')
     print('Training:', rbf_svm.score(train_data, train_label.ravel()))
     print('Validation:', rbf_svm.score(validation_data, validation_label.ravel()))
     print('Testing:', rbf_svm.score(test_data, test_label.ravel()))
-    
+        
+    print('\n\n--------------SVM RBF Gamma Auto------------------\n\n')
+    rbf_svm = SVC(kernel='rbf', gamma='auto')
+    rbf_svm.fit(reduced_train_data, reduced_train_label.ravel())
+    print('RBF Kernel (gamma=auto) Accuracy:')
+    print('Training:', rbf_svm.score(train_data, train_label.ravel()))
+    print('Validation:', rbf_svm.score(validation_data, validation_label.ravel()))
+    print('Testing:', rbf_svm.score(test_data, test_label.ravel()))
+
     """
     Script for Extra Credit Part
     """
@@ -336,7 +346,7 @@ if __name__ == "__main__":
     opts_b = {'maxiter': 100}
     
     args_b = (train_data, Y)
-    nn_params = minimize(mlrObjFunction, initialWeights_b, jac=True, args=args_b, method='CG', options=opts_b)
+    nn_params = minimize(mlrObjFunction, initialWeights_b.flatten(), jac=True, args=args_b, method='CG', options=opts_b)
     W_b = nn_params.x.reshape((n_feature + 1, n_class))
     
     # Find the accuracy on Training Dataset
@@ -350,4 +360,6 @@ if __name__ == "__main__":
     # Find the accuracy on Testing Dataset
     predicted_label_b = mlrPredict(W_b, test_data)
     print('\n Testing set Accuracy:' + str(100 * np.mean((predicted_label_b == test_label).astype(float))) + '%')
+
+
     
