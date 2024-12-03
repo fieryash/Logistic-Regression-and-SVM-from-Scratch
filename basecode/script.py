@@ -27,7 +27,7 @@ def preprocess():
        set
     """
 
-    mat = loadmat('mnist_all.mat')  # loads the MAT object as a Dictionary
+    mat = loadmat('basecode\mnist_all.mat')  # loads the MAT object as a Dictionary
 
     n_feature = mat.get("train1").shape[1]
     n_sample = 0
@@ -267,7 +267,7 @@ if __name__ == "__main__":
     for i in range(n_class):
         labeli = Y[:, i].reshape(n_train, 1)
         args = (train_data, labeli)
-        nn_params = minimize(blrObjFunction, initialWeights, jac=True, args=args, method='CG', options=opts)
+        nn_params = minimize(blrObjFunction, initialWeights.flatten(), jac=True, args=args, method='CG', options=opts)
         W[:, i] = nn_params.x.reshape((n_feature + 1,))
     
     # Find the accuracy on Training Dataset
