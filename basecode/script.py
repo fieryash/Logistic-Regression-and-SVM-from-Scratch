@@ -183,20 +183,34 @@ def mlrObjFunction(params, *args):
         error_grad: the vector of size (D+1) x 10 representing the gradient of
                     error function
     """
-    train_data, labeli = args
+    train_data, Y = args
     n_data = train_data.shape[0]
-    n_feature = train_data.shape[1]
-    error = 0
-    n_class = 10
-    error_grad = np.zeros((n_feature + 1, n_class))
+    n_features = train_data.shape[1]
 
     ##################
     # YOUR CODE HERE #
     ##################
     # HINT: Do not forget to add the bias term to your input data
+    
+    # Modified n_classes to make it dynamic instead of static
+    n_classes = Y.shape[1]
 
+    params = params.reshape((n_features + 1, n_classes))
 
-    return error, error_grad
+    # This aadd the bias term to the data
+    train_data = np.hstack((np.ones((n_data, 1)), train_data))
+
+    # Using the softmax function to compute theta (probabilities)
+    theta = np.exp(np.dot(train_data, params))
+    theta /= np.sum(theta, axis=1, keepdims=True)
+
+    # The computes the error
+    error = -np.sum(Y * np.log(theta)) / n_data
+
+    # This computes the gradient
+    error_grad = np.dot(train_data.T, (theta - Y)) / n_data
+
+    return error, error_grad.flatten()
 
 
 def mlrPredict(W, data):
@@ -214,12 +228,14 @@ def mlrPredict(W, data):
          corresponding feature vector given in data matrix
 
     """
-    label = np.zeros((data.shape[0], 1))
+    n_data = data.shape[0]
+    # Adding the bias term to the data
+    data = np.hstack((np.ones((n_data, 1)), data))
 
-    ##################
-    # YOUR CODE HERE #
-    ##################
-    # HINT: Do not forget to add the bias term to your input data
+    # Computing the posterior probabilities and returning the label with highest probability
+    probabilities = np.exp(np.dot(data, W))
+    probabilities /= np.sum(probabilities, axis=1, keepdims=True)
+    label = np.argmax(probabilities, axis=1).reshape((n_data, 1))
 
     return label
 
