@@ -3,6 +3,7 @@ from scipy.io import loadmat
 from scipy.optimize import minimize
 from sklearn import svm
 import matplotlib.pyplot as plt
+from sklearn.svm import SVC
 
 
 def preprocess():
@@ -289,7 +290,24 @@ if __name__ == "__main__":
     ##################
     # YOUR CODE HERE #
     ##################
-    
+    n_samples = 10000
+    indices = np.random.choice(train_data.shape[0], n_samples, replace=False)
+    reduced_train_data = train_data[indices, :]
+    reduced_train_label = train_label[indices, :]
+
+    linear_svm = SVC(kernel='linear')
+    linear_svm.fit(reduced_train_data, reduced_train_label.ravel())
+    print('Linear Kernel Accuracy:')
+    print('Training:', linear_svm.score(train_data, train_label.ravel()))
+    print('Validation:', linear_svm.score(validation_data, validation_label.ravel()))
+    print('Testing:', linear_svm.score(test_data, test_label.ravel()))
+
+    rbf_svm = SVC(kernel='rbf', gamma=1)
+    rbf_svm.fit(reduced_train_data, reduced_train_label.ravel())
+    print('RBF Kernel (gamma=1) Accuracy:')
+    print('Training:', rbf_svm.score(train_data, train_label.ravel()))
+    print('Validation:', rbf_svm.score(validation_data, validation_label.ravel()))
+    print('Testing:', rbf_svm.score(test_data, test_label.ravel()))
     
     """
     Script for Extra Credit Part
