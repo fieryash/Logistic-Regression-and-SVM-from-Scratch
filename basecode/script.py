@@ -154,6 +154,17 @@ def blrPredict(W, data):
     ##################
     # HINT: Do not forget to add the bias term to your input data
 
+    n_data = data.shape[0]  
+
+    # Adding the bias term to the data
+    data = np.hstack((np.ones((n_data, 1)), data))
+
+    # This line is computing the posterior probabilities
+    probabilities = sigmoid(np.dot(data, W))
+
+    # PThis will predict the label with the highest probability and thus uses argmax
+    label = np.argmax(probabilities, axis=1).reshape((n_data, 1))
+
     return label
 
 def mlrObjFunction(params, *args):
