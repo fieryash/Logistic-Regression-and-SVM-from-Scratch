@@ -5,7 +5,6 @@ from sklearn import svm
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
 
-
 def preprocess():
     """ 
      Input:
@@ -336,6 +335,37 @@ if __name__ == "__main__":
     print('Training:', rbf_svm.score(train_data, train_label.ravel()))
     print('Validation:', rbf_svm.score(validation_data, validation_label.ravel()))
     print('Testing:', rbf_svm.score(test_data, test_label.ravel()))
+
+    print('\n\n--------------SVM RBF with Varying C------------------\n\n')
+    # Values of C
+    C_values = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+
+    # Initialize lists to store accuracies
+    training_accuracies = []
+    validation_accuracies = []
+    testing_accuracies = []
+
+    for C in C_values:
+        rbf_svm = SVC(kernel='rbf', C=C, gamma='auto')
+        rbf_svm.fit(reduced_train_data, reduced_train_label.ravel())
+
+        # Append accuracies for current C value
+        training_accuracies.append(rbf_svm.score(train_data, train_label.ravel()) * 100)
+        validation_accuracies.append(rbf_svm.score(validation_data, validation_label.ravel()) * 100)
+        testing_accuracies.append(rbf_svm.score(test_data, test_label.ravel()) * 100)
+
+    # Plotting the accuracies
+    plt.figure(figsize=(10, 6))
+    plt.plot(C_values, training_accuracies, label='Training Accuracy', marker='o')
+    plt.plot(C_values, validation_accuracies, label='Validation Accuracy', marker='o')
+    plt.plot(C_values, testing_accuracies, label='Testing Accuracy', marker='o')
+
+    plt.title('Accuracy vs C for SVM with RBF Kernel')
+    plt.xlabel('C (Regularization Parameter)')
+    plt.ylabel('Accuracy (%)')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
     """
     Script for Extra Credit Part
